@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Products from "./components/Products";
+import { IProduct } from "./common/interface/products";
 
 class App extends Component<any, any> {
   constructor(props: any) {
@@ -12,7 +13,7 @@ class App extends Component<any, any> {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/products")
+    fetch("http://localhost:8000/products")
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -22,7 +23,9 @@ class App extends Component<any, any> {
       });
   }
 
-  handleAddToCart = () => {};
+  handleAddToCart = (e: any, product: IProduct) => {
+    
+  };
 
   render() {
     return (
@@ -32,7 +35,7 @@ class App extends Component<any, any> {
         <div className="row">
           <div className="col-md-8">
             <Products
-              products={{ products: this.state.products }}
+              products={this.state.products}
               handleAddToCart={this.handleAddToCart}
             />
           </div>

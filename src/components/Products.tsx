@@ -1,19 +1,34 @@
-import React, { Component } from 'react';
-import {IProducts} from '../common/interface/products';
+import React, { Component, Fragment } from "react";
+import { IProduct } from "../common/interface/products";
+import util from "../common/util";
 
 interface props {
-    products: IProducts,
-    handleAddToCart(): any 
+  products: IProduct[];
+  handleAddToCart(e: any, product: IProduct): any;
 }
 
 export default class Products extends Component<props, any> {
-    render() {
-        const productItems = this.props.products.products.map(a => console.log(a));
-        console.log(productItems);
+  handleAddToCart = () => {};
+
+  render() {
+    const productItems =
+      this.props.products &&
+      this.props.products.map(product => {
         return (
-            <div>
-                
+          <div className="col-md-4">
+            <div className="thumbnail text-center">
+              <a href="#" onClick={this.handleAddToCart}>
+                <img src={`/products/${product.sku}_2.jpg`} />
+                <p>{product.title}</p>
+              </a>
+              <div>
+                {product.price && <b>{util.formatCurrency(product.price)}</b>}
+                <button className="btn btn-primary" onClick={(e) => this.props.handleAddToCart(e, product)}>Add To Cart</button>
+              </div>
             </div>
-        )
-    }
+          </div>
+        );
+      });
+    return <div className="row">{productItems}</div>;
+  }
 }
