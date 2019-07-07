@@ -35,13 +35,13 @@ class App extends Component<any, state> {
 
   handleAddToCart = (e: any, product: IProduct) => {};
 
-  handleChangeSort = (e: any) => {
-    this.setState({ sort: e.target.value });
+  handleChangeSort = (e: React.FormEvent<HTMLSelectElement>) => {
+    this.setState({ sort: e.currentTarget.value });
     this.listProduct();
   };
 
-  handleChangeSize = (e: any) => {
-    this.setState({ size: e.target.value });
+  handleChangeSize = (e: React.FormEvent<HTMLSelectElement>) => {
+    this.setState({ size: e.currentTarget.value });
     this.listProduct();
   };
 

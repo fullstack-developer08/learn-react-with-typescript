@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { IProduct } from "../common/interface/products";
 
 interface props {
-  size: any;
+  size: string;
   count: number;
-  sort: any;
-  handleChangeSort(e: any): any;
-  handleChangeSize(e: any): any;
+  sort: string;
+  handleChangeSort(e: React.FormEvent<HTMLSelectElement>): any;
+  handleChangeSize(e: React.FormEvent<HTMLSelectElement>): any;
 }
 
 export default class FilterProducts extends Component<props, any> {
