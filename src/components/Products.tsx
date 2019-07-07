@@ -15,7 +15,7 @@ export default class Products extends Component<props, any> {
       this.props.products &&
       this.props.products.map(product => {
         return (
-          <div className="col-md-4">
+          <div className="col-md-4" key={product.id}>
             <div className="thumbnail text-center">
               <a href="#" onClick={this.handleAddToCart}>
                 <img src={`/products/${product.sku}_2.jpg`} />
@@ -23,7 +23,12 @@ export default class Products extends Component<props, any> {
               </a>
               <div>
                 {product.price && <b>{util.formatCurrency(product.price)}</b>}
-                <button className="btn btn-primary" onClick={(e) => this.props.handleAddToCart(e, product)}>Add To Cart</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={e => this.props.handleAddToCart(e, product)}
+                >
+                  Add To Cart
+                </button>
               </div>
             </div>
           </div>
