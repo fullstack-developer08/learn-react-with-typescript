@@ -3,20 +3,30 @@ export default {
     return "$" + Number(num.toFixed(2)).toLocaleString() + " ";
   },
 
-  setLocalStorage: (name: string, value: any) => {
+  setLocalStorage: (key: string, value: any) => {
     try {
-      let val = JSON.stringify(value);
-      localStorage.setItem(name, val);
+      const obj = JSON.stringify(value);
+      localStorage.setItem(key, obj);
     } catch (e) {
       return;
     }
   },
 
-  getLocalStorage: () => {
-    return;
+  getLocalStorage: (key: string) => {
+    try {
+      const stringObj = localStorage.getItem(key);
+      if (stringObj === null) return undefined;
+      return JSON.parse(stringObj);
+    } catch (e) {
+      return undefined;
+    }
   },
 
-  removeLocalStorage: () => {
-    return;
+  removeLocalStorage: (key: string) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      return undefined;
+    }
   }
 };

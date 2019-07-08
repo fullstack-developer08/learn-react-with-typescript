@@ -10,4 +10,5 @@ export interface IProduct {
   availableSizes?: string[];
   price?: number;
   isFreeShipping?: boolean;
+  count?: number;
 }

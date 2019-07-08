@@ -3,12 +3,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Products from "./components/Products";
 import { IProduct } from "./common/interface/products";
 import FilterProducts from "./components/FilterProducts";
+import Basket from "./components/Basket";
+import util from "./common/util";
 
 interface state {
   products: IProduct[];
   filteredProducts: IProduct[];
   sort: string;
   size: string;
+  cartItems: IProduct[];
 }
 
 class App extends Component<any, state> {
@@ -18,7 +21,8 @@ class App extends Component<any, state> {
       products: [],
       filteredProducts: [],
       size: "",
-      sort: ""
+      sort: "",
+      cartItems: []
     };
   }
 
@@ -31,9 +35,14 @@ class App extends Component<any, state> {
           filteredProducts: res
         });
       });
-  }
 
-  handleAddToCart = (e: any, product: IProduct) => {};
+    const cartItems = util.getLocalStorage("cartItems");
+    if(cartItems) {
+      this.setState({
+        cartItems: cartItems
+      });
+    }
+  }
 
   handleChangeSort = (e: React.FormEvent<HTMLSelectElement>) => {
     this.setState({ sort: e.currentTarget.value });
@@ -79,13 +88,41 @@ class App extends Component<any, state> {
     });
   };
 
+  handleRemoveFromCart = (e: any, product: IProduct) => {
+    this.setState(state => {
+      const cartItems = state.cartItems.filter(item => item.id !== product.id);
+      util.setLocalStorage("cartItems", cartItems);
+      return {cartItems};
+    })
+  };
+
+  handleAddToCart = (e: any, product: IProduct) => {
+    this.setState(state => {
+      const cartItems = state.cartItems;
+      let isProductInCart = false;
+      cartItems.map(cartItem => {
+        if (cartItem.id === product.id) {
+          isProductInCart = true;
+          if (cartItem.count) {
+            cartItem.count++;
+          }
+        }
+      });
+      if (!isProductInCart) {
+        cartItems.push({ ...product, count: 1 });
+      }
+      util.setLocalStorage("cartItems", cartItems);
+      return { cartItems: cartItems };
+    });
+  };
+
   render() {
     return (
       <Fragment>
         <h1>Ecommerce Shopping Cart Application</h1>
         <hr />
         <div className="row">
-          <div className="col-md-10">
+          <div className="col-md-8">
             <FilterProducts
               size={this.state.size}
               sort={this.state.sort}
@@ -98,7 +135,12 @@ class App extends Component<any, state> {
               handleAddToCart={this.handleAddToCart}
             />
           </div>
-          <div className="col-md-2" />
+          <div className="col-md-4">
+            <Basket
+              cartItems={this.state.cartItems}
+              handleRemoveFromCart={this.handleRemoveFromCart}
+            />
+          </div>
         </div>
       </Fragment>
     );
