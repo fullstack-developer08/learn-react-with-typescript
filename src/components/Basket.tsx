@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { IProduct } from "../common/interface/products";
+import util from "../common/util";
 
 interface props {
   cartItems: IProduct[];
@@ -23,7 +24,9 @@ export default class Basket extends Component<props, any> {
                 <li>
                   <b>
                     {item.title} X {item.count} ={" "}
-                    {item.price && item.count && item.price * item.count}
+                    {item.price &&
+                      item.count &&
+                      util.formatCurrency(item.price * item.count)}
                   </b>
                   <button
                     className="btn btn-danger"
@@ -34,6 +37,22 @@ export default class Basket extends Component<props, any> {
                 </li>
               ))}
             </ul>
+            Total:{" "}
+            {util.formatCurrency(
+              cartItems.reduce((a: any, item) => {
+                if (item.price && item.count) {
+                  return a + item.price * item.count;
+                }
+              }, 0)
+            )}
+            <div>
+              <button
+                className="btn btn-primary"
+                onClick={e => alert("checkout need to implement....")}
+              >
+                Checkout
+              </button>
+            </div>
           </div>
         )}
       </div>

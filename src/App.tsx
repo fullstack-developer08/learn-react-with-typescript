@@ -5,6 +5,8 @@ import { IProduct } from "./common/interface/products";
 import FilterProducts from "./components/FilterProducts";
 import Basket from "./components/Basket";
 import util from "./common/util";
+import { Provider } from 'react-redux';
+import store from './common/store'
 
 interface state {
   products: IProduct[];
@@ -37,7 +39,7 @@ class App extends Component<any, state> {
       });
 
     const cartItems = util.getLocalStorage("cartItems");
-    if(cartItems) {
+    if (cartItems) {
       this.setState({
         cartItems: cartItems
       });
@@ -92,8 +94,8 @@ class App extends Component<any, state> {
     this.setState(state => {
       const cartItems = state.cartItems.filter(item => item.id !== product.id);
       util.setLocalStorage("cartItems", cartItems);
-      return {cartItems};
-    })
+      return { cartItems };
+    });
   };
 
   handleAddToCart = (e: any, product: IProduct) => {
@@ -118,31 +120,33 @@ class App extends Component<any, state> {
 
   render() {
     return (
-      <Fragment>
-        <h1>Ecommerce Shopping Cart Application</h1>
-        <hr />
-        <div className="row">
-          <div className="col-md-8">
-            <FilterProducts
-              size={this.state.size}
-              sort={this.state.sort}
-              handleChangeSize={this.handleChangeSize}
-              handleChangeSort={this.handleChangeSort}
-              count={this.state.filteredProducts.length}
-            />
-            <Products
-              products={this.state.filteredProducts}
-              handleAddToCart={this.handleAddToCart}
-            />
+      <Provider store={store}>
+        <Fragment>
+          <h1>Ecommerce Shopping Cart Application</h1>
+          <hr />
+          <div className="row">
+            <div className="col-md-8">
+              <FilterProducts
+                size={this.state.size}
+                sort={this.state.sort}
+                handleChangeSize={this.handleChangeSize}
+                handleChangeSort={this.handleChangeSort}
+                count={this.state.filteredProducts.length}
+              />
+              <Products
+                products={this.state.filteredProducts}
+                handleAddToCart={this.handleAddToCart}
+              />
+            </div>
+            <div className="col-md-4">
+              <Basket
+                cartItems={this.state.cartItems}
+                handleRemoveFromCart={this.handleRemoveFromCart}
+              />
+            </div>
           </div>
-          <div className="col-md-4">
-            <Basket
-              cartItems={this.state.cartItems}
-              handleRemoveFromCart={this.handleRemoveFromCart}
-            />
-          </div>
-        </div>
-      </Fragment>
+        </Fragment>
+      </Provider>
     );
   }
 }
