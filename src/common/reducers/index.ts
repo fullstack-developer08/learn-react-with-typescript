@@ -1,4 +1,10 @@
 import { combineReducers } from "redux";
 import productReducer from "./productReducer";
+import cartReducer from "./cartReducer";
 
-export default combineReducers({ products: productReducer });
+const reducers = {
+  products: productReducer,
+  cart: cartReducer
+};
+
+export default combineReducers(reducers);

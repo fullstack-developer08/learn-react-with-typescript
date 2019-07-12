@@ -1,13 +1,25 @@
 import React, { Component } from "react";
 import { IProduct } from "../common/interface/products";
 import util from "../common/util";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { removeFromCart } from "../common/actions/cartActions";
 
 interface props {
   cartItems: IProduct[];
-  handleRemoveFromCart: (e: any, item: IProduct) => void;
+  removeFromCart(payload: any): any;
 }
 
-export default class Basket extends Component<props, any> {
+class Basket extends Component<props, any> {
+  handleRemoveFromCart = (e: any, product: IProduct) => {
+    const existsCartItems = [...this.props.cartItems];
+    const filteredCartItems = existsCartItems.filter(
+      item => item.id !== product.id
+    );
+    util.setLocalStorage("cartItems", filteredCartItems);
+    this.props.removeFromCart(filteredCartItems);
+  };
+
   render() {
     const { cartItems } = this.props;
     return (
@@ -30,7 +42,7 @@ export default class Basket extends Component<props, any> {
                   </b>
                   <button
                     className="btn btn-danger"
-                    onClick={e => this.props.handleRemoveFromCart(e, item)}
+                    onClick={e => this.handleRemoveFromCart(e, item)}
                   >
                     X
                   </button>
@@ -59,3 +71,23 @@ export default class Basket extends Component<props, any> {
     );
   }
 }
+
+const mapStateToProps = (state: any) => {
+  return {
+    cartItems: state.cart.cartItems
+  };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return bindActionCreators(
+    {
+      removeFromCart: removeFromCart
+    },
+    dispatch
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Basket);
